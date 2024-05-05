@@ -1,6 +1,10 @@
-console.log("Hello World");
 let array = ["rock", "paper", "scissors"];
- 
+const buttons = document.querySelectorAll("button");
+const resultDiv = document.getElementById("results");
+const scoreDiv = document.getElementById("score");
+let playerScore = 0;
+let computerScore = 0;
+
 function getComputerChoice() {
     let computerArray = array[(Math.floor((Math.random() * array.length)))]
     console.log(computerArray);
@@ -38,30 +42,30 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
+buttons.forEach(button => {
+    button.addEventListener('click', function() {
+        const computerChoice = getComputerChoice()
+        let resultValue = playRound(button.id, computerChoice);
+        game(resultValue);
+    });
+});
 
-    for (let i = 1; i <= 5; i++) {
-        const playerSelection = prompt("What is your choice?");
-        const computerSelection = getComputerChoice();
-        const result = playRound(playerSelection.toLowerCase(), computerSelection);
-
-        if (result === "computer"){
-            computerScore++;
-        }
-        else if (result === "player"){
-            playerScore++;
-        }
-    }
-    if (playerScore > computerScore){
-        console.log("You Won!");
-    }
-    else if (computerScore > playerScore){
-        console.log("You Lose!");
+function game(winner) {
+    if (winner === "player") {
+        playerScore++;
     }
     else {
-        console.log("It's a draw");
+        computerScore++;
     }
+
+    if (playerScore === 5){
+        document.getElementById("results").innerText = "You Won, Reload to Play Again"
+        buttons.forEach(button =>  button.disabled = true)
+    }
+    else if (computerScore === 5) {
+        document.getElementById("results").innerText = "You Lose, Reload to Play Again"
+        buttons.forEach(button =>  button.disabled = true)
+
+    }
+    document.getElementById("score").innerText = `Your Score: ${playerScore} \n Computer Score: ${computerScore}`;
 }
-game();
